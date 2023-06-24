@@ -1,3 +1,4 @@
+import json
 from typing import List
 
 from EdmondsKarpAlg import EdmondsKarpAlg
@@ -70,35 +71,51 @@ class ScheduleSolver:
         max_flow_finder = EdmondsKarpAlg(self.graph)
         return max_flow_finder.compute_max_flow(self.source, self.sink)
 
-    def print_project_team_time_distribution(self):
-        for project in self.projects:
-            print("---------")
-            print(f'Project :{project}')
-            for team in self.teams:
-                if team not in self.graph.edges[project]:
-                    continue
-
-                edge = self.graph.get_edge_from_vertices(project, team)
-                if edge:
-                    print(f'Team: {team}, time: {edge.flow_available}')
-
-    def print_team_project_time_distribution(self):
+    def get_team_projects_time_distribution(self):
+        distribution = {}
         for team in self.teams:
-            print("---------")
-            print(f'Team :{team}')
+            distribution[team.name] = {}
             for project in self.projects:
                 if team not in self.graph.edges[project]:
                     continue
+                if edge := self.graph.get_edge_from_vertices(project, team):
+                    distribution[team.name][project.name] = edge.flow_available
 
-                edge = self.graph.get_edge_from_vertices(project, team)
-                if edge:
-                    print(f'Project: {project}, time: {edge.flow_available}')
+        return distribution
+
+    def get_project_teams_time_distribution(self):
+        distribution = {}
+        for project in self.projects:
+            distribution[project.name] = {}
+            for team in self.teams:
+                if team not in self.graph.edges[project]:
+                    continue
+                if edge:= self.graph.get_edge_from_vertices(project, team):
+                    distribution[project.name][team.name] = edge.flow_available
+
+        return distribution
 
     def print_solution(self):
         maximum_flow = self.compute_maximum_flow()
         print("Maximum flow: " + str(maximum_flow))
 
-        self.print_project_team_time_distribution()
-        print('=========================================')
-        self.print_team_project_time_distribution()
+        project_teams_time_distribution = self.get_project_teams_time_distribution()
+        for project_index in range(len(self.projects)):
+            current_project_name = self.projects[project_index].name
+            needed_time = self.project_times[project_index]
+            solution = project_teams_time_distribution[current_project_name]
+            completed_time = sum(solution.values())
 
+            if needed_time != completed_time:
+                print("The problem doesn't have a solution")
+                print(f"For project {current_project_name} is not completed: {completed_time}/{needed_time} time units allocated")
+                return
+
+        print("The problem has solution")
+
+        print(json.dumps(project_teams_time_distribution, indent=4))
+        
+        print('=========================================')
+
+        team_projects_time_distribution = self.get_team_projects_time_distribution()
+        print(json.dumps(team_projects_time_distribution, indent=4))
