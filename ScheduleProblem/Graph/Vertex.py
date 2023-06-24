@@ -1,12 +1,4 @@
 class Vertex:
-    """
-    Class representing vertex/node in graph
-    Attributes
-    ----------
-    name : str name of vetex
-    visited : bool for BFS purpose
-    """
-
     def __init__(self, name: str):
         self.name = name
         self.visited = False

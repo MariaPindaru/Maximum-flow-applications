@@ -79,7 +79,7 @@ class ScheduleSolver:
                 if team not in self.graph.edges[project]:
                     continue
                 if edge := self.graph.get_edge_from_vertices(project, team):
-                    distribution[team.name][project.name] = edge.flow_available
+                    distribution[team.name][project.name] = edge.flow
 
         return distribution
 
@@ -91,7 +91,7 @@ class ScheduleSolver:
                 if team not in self.graph.edges[project]:
                     continue
                 if edge:= self.graph.get_edge_from_vertices(project, team):
-                    distribution[project.name][team.name] = edge.flow_available
+                    distribution[project.name][team.name] = edge.flow
 
         return distribution
 
@@ -114,7 +114,7 @@ class ScheduleSolver:
         print("The problem has solution")
 
         print(json.dumps(project_teams_time_distribution, indent=4))
-        
+
         print('=========================================')
 
         team_projects_time_distribution = self.get_team_projects_time_distribution()

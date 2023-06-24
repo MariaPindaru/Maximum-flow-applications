@@ -1,4 +1,7 @@
+from typing import List
+
 from Graph.Digraph import Digraph
+from Graph.Vertex import Vertex
 
 
 class EdmondsKarpAlg:
@@ -12,26 +15,17 @@ class EdmondsKarpAlg:
         path = self.graph.get_shortest_path(src, dest)
 
         while path is not None:
-
-            _s = ""
-            for x in path:
-                _s += str(x) + "->"
-            _s = _s[0:len(_s) - 2]
-            print("\nprinting path: " + _s)
+            print_path(path)
 
             edges_in_path = []
             for vert_idx in range(0, len(path) - 1):
                 edge = self.graph.get_edge_from_vertices(path[vert_idx], path[vert_idx + 1])
                 edges_in_path.append(edge)
 
-            min_flow = min([edge.flow_available for edge in edges_in_path])
+            min_flow = min([edge.flow for edge in edges_in_path])
             for edge in edges_in_path:
-                self.graph.lower_flow_given_edge(edge, min_flow)
-
-                if self.graph.has_reversed_edge(edge.src, edge.dest, min_flow):
-                    pass
-                else:
-                    self.graph.create_reversed_edge(edge.dest, edge.src, min_flow)
+                edge.flow -= min_flow
+                self.graph.update_reversed_edge(edge, min_flow)
 
             flow += min_flow
             print("actual minimum flow of edges: " + str(min_flow))
@@ -40,3 +34,10 @@ class EdmondsKarpAlg:
             print(self.graph)
 
         return flow
+
+def print_path(path: List[Vertex]):
+    path_str = ""
+    for x in path:
+        path_str += str(x) + "->"
+    path_str = path_str[0:len(path_str) - 2]
+    print("\nShortest path: " + path_str)

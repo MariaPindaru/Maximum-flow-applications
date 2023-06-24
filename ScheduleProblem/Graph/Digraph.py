@@ -39,19 +39,18 @@ class Digraph(Graph):
         self.edges[start].append(end)
         self.edgeList.append(edge)
 
-    def has_reversed_edge(self, start: Vertex, end: Vertex, min_flow: int) -> bool:
-        for edge in self.edgeList:
-            if edge.src == end and edge.dest == start:
-                edge.flow_available += min_flow
-                return True
-        return False
-
-    def create_reversed_edge(self, start: Vertex, end: Vertex, min_flow: int):
-        reversed_edge = Edge(start, end, 0)
-        reversed_edge.flow_available = min_flow
-
-        self.edgeList.append(reversed_edge)
-        self.edges[start].append(end)
+    def get_reversed_edge(self, edge):
+        for edge_r in self.edgeList:
+            if edge_r.src == edge.dest and edge_r.dest == edge.src:
+                return edge_r
+    def update_reversed_edge(self, edge: Edge, min_flow: int):
+        if reversed_edge := self.get_reversed_edge(edge):
+            reversed_edge.flow += min_flow
+        else:
+            reversed_edge = Edge(edge.dest, edge.src, edge.capacity)
+            reversed_edge.flow = min_flow
+            self.edgeList.append(reversed_edge)
+            self.edges[edge.dest].append(edge.src)
 
     def get_edge_from_vertices(self, start: Vertex, end: Vertex) -> Edge:
         for edge in self.edgeList:
@@ -70,11 +69,6 @@ class Digraph(Graph):
     def get_vertices_names(self) -> list:
         return [ver.name for ver in self.vertices]
 
-    def lower_flow_given_edge(self, edge: Edge, minFlow: int):
-        for edge_idx in range(0, len(self.edgeList)):
-            if self.edgeList[edge_idx].src == edge.src and self.edgeList[edge_idx].dest == edge.dest:
-                self.edgeList[edge_idx].update_flow_available(minFlow)
-
     def get_shortest_path(self, start: Vertex, end: Vertex):
         self.clear_visits_bfs()
         start.clear_visit()
@@ -85,13 +79,14 @@ class Digraph(Graph):
 
         while not q.empty():
             path = q.get()
-
             vertex = path[-1]
+
             if vertex == end:
                 return path
+
             elif vertex not in visited:
                 for child in self.coming_out_of(vertex):
-                    if self.get_edge_from_vertices(vertex, child).flow_available > 0:
+                    if self.get_edge_from_vertices(vertex, child).flow > 0:
                         path_ = list(path)
                         path_.append(child)
                         q.put(path_)
