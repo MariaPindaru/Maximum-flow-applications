@@ -13,12 +13,12 @@ class PlainEdge:
 
 
 class Edge(PlainEdge):
-    def __init__(self, src: Vertex, dest: Vertex, weight: int):
+    def __init__(self, src: Vertex, dest: Vertex, capacity: int):
         super().__init__(src, dest)
         self.src = src
         self.dest = dest
-        self.capacity = weight
-        self.flow = self.capacity
+        self.capacity = capacity
+        self.residual_capacity = self.capacity
 
     def get_source(self):
         return self.src
@@ -29,10 +29,10 @@ class Edge(PlainEdge):
     def get_capacity(self):
         return self.capacity
 
-    def get_flow(self):
-        return self.flow
+    def get_residual_capacity(self):
+        return self.residual_capacity
 
     def __str__(self):
         return '(' + str(self.src.get_name()) + ' --> ' + str(self.dest.get_name()) + ') ' + \
-               ' with flow: ' + str(self.get_flow()) + \
+               ' with flow: ' + str(self.get_residual_capacity()) + \
                ' and capacity: ' + str(self.get_capacity())

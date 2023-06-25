@@ -18,17 +18,17 @@ class EdmondsKarpAlg:
             print_path(path)
 
             edges_in_path = []
-            for vert_idx in range(0, len(path) - 1):
-                edge = self.graph.get_edge_from_vertices(path[vert_idx], path[vert_idx + 1])
+            for index in range(0, len(path) - 1):
+                edge = self.graph.get_edge_from_vertices(path[index], path[index + 1])
                 edges_in_path.append(edge)
 
-            min_flow = min([edge.flow for edge in edges_in_path])
+            min_residual_capacity = min([edge.residual_capacity for edge in edges_in_path])
             for edge in edges_in_path:
-                edge.flow -= min_flow
-                self.graph.update_reversed_edge(edge, min_flow)
+                edge.residual_capacity -= min_residual_capacity
+                self.graph.update_reversed_edge(edge, min_residual_capacity)
 
-            flow += min_flow
-            print("actual minimum flow of edges: " + str(min_flow))
+            flow += min_residual_capacity
+            print("actual minimum flow of edges: " + str(min_residual_capacity))
             print("actual maximum flow of graph: " + str(flow))
             path = self.graph.get_shortest_path(src, dest)
             print(self.graph)

@@ -79,7 +79,7 @@ class ScheduleSolver:
                 if team not in self.graph.edges[project]:
                     continue
                 if edge := self.graph.get_edge_from_vertices(project, team):
-                    distribution[team.name][project.name] = edge.flow
+                    distribution[team.name][project.name] = edge.residual_capacity
 
         return distribution
 
@@ -91,7 +91,7 @@ class ScheduleSolver:
                 if team not in self.graph.edges[project]:
                     continue
                 if edge:= self.graph.get_edge_from_vertices(project, team):
-                    distribution[project.name][team.name] = edge.flow
+                    distribution[project.name][team.name] = edge.residual_capacity
 
         return distribution
 
@@ -108,7 +108,7 @@ class ScheduleSolver:
 
             if needed_time != completed_time:
                 print("The problem doesn't have a solution")
-                print(f"For project {current_project_name} is not completed: {completed_time}/{needed_time} time units allocated")
+                print(f"Project {current_project_name} is not completed: {completed_time}/{needed_time} time units allocated")
                 return
 
         print("The problem has solution")

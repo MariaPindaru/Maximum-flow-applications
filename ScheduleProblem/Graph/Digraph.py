@@ -43,12 +43,12 @@ class Digraph(Graph):
         for edge_r in self.edgeList:
             if edge_r.src == edge.dest and edge_r.dest == edge.src:
                 return edge_r
-    def update_reversed_edge(self, edge: Edge, min_flow: int):
+    def update_reversed_edge(self, edge: Edge, min_residual_capacity: int):
         if reversed_edge := self.get_reversed_edge(edge):
-            reversed_edge.flow += min_flow
+            reversed_edge.residual_capacity += min_residual_capacity
         else:
             reversed_edge = Edge(edge.dest, edge.src, edge.capacity)
-            reversed_edge.flow = min_flow
+            reversed_edge.residual_capacity = min_residual_capacity
             self.edgeList.append(reversed_edge)
             self.edges[edge.dest].append(edge.src)
 
@@ -86,7 +86,7 @@ class Digraph(Graph):
 
             elif vertex not in visited:
                 for child in self.coming_out_of(vertex):
-                    if self.get_edge_from_vertices(vertex, child).flow > 0:
+                    if self.get_edge_from_vertices(vertex, child).residual_capacity > 0:
                         path_ = list(path)
                         path_.append(child)
                         q.put(path_)
