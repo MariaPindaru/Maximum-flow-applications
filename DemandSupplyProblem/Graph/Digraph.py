@@ -61,6 +61,14 @@ class Digraph(Graph):
     def coming_out_of(self, vertex):
         return self.edges[vertex]
 
+    def coming_into(self, vertex):
+        list_of_nodes = []
+        for edge in self.edgeList:
+            if edge.dest == vertex and edge.dest not in list_of_nodes:
+                list_of_nodes.append(edge.src)
+
+        return list_of_nodes
+
     def has_vertex(self, vertex):
         return vertex in self.vertices
 
@@ -103,7 +111,7 @@ class Digraph(Graph):
             vertex = path[-1]
 
             if vertex == end:
-                return len(path)
+                return path
 
             elif vertex not in visited:
                 for child in self.coming_out_of(vertex):
@@ -121,7 +129,7 @@ class Digraph(Graph):
         for vertex in self.vertices:
             if vertex == start:
                 continue
-            self.level[vertex] = self.get_shortest_path(vertex, end) - 1
+            self.level[vertex] = len(self.get_shortest_path(vertex, end)) - 1
 
         return self.level[end] >= 0
 

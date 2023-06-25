@@ -3,20 +3,30 @@ from SupplyDemandSolver import SupplyDemandSolver
 if __name__ == "__main__":
     solver = SupplyDemandSolver()
 
+    # supply_points = 2
+    # supply_quantities = [35, 20]
+    # demand_points = 3
+    # demand_quantities = [10, 25, 15]
+    # transit_points = 1
+
     supply_points = 2
-    supply_quantities = [10, 20]
-    demand_points = 3
-    demand_quantities = [10, 25, 15]
-    transit_points = 1
+    supply_quantities = [4, 2]
+    demand_points = 2
+    demand_quantities = [3, 3]
+
+    transit_points = 4
+    supply_transit = [[0], [1], [2]]
+    transit_transit = [[3], [], [], []]
+    transit_demand = [[0], [1], [0], [1]]
 
     solver.create_supply_nodes(supply_points)
     solver.create_transit_nodes(transit_points)
     solver.create_demand_nodes(demand_points)
 
     solver.set_constraints(supply_quantities, demand_quantities)
-
+    solver.init_graph_edges(supply_transit, transit_transit, transit_demand)
     solver.print_solution()
-    
+
     # v1, v2, v3 = Vertex('2'), Vertex('3'), Vertex('4')
     #
     # graph.add_vertex(source)
