@@ -1,35 +1,12 @@
 import queue
-from collections import deque
-from typing import List
 
 from Graph.Digraph import Digraph
-from Graph.Vertex import Vertex
 
 
 class PreFlowFIFOAlg:
     def __init__(self, graph: Digraph):
         self.graph = graph
         self.queue = None
-
-    def send_flow(self, u, flow, sink, start):
-        if u == sink:
-            return flow
-
-        while start[u] < len(self.graph.edges[u]):
-            edge = self.graph.get_edge_from_vertices(u, self.graph.edges[u][start[u]])
-            if self.graph.level[edge.dest] == self.graph.level[u] + 1 and edge.flow < edge.capacity:
-                current_flow = min(flow, edge.capacity - edge.flow)
-                bottleneck_flow = self.send_flow(edge.dest, current_flow, sink, start)
-
-                if bottleneck_flow > 0:
-                    edge.flow += bottleneck_flow
-                    self.graph.update_reversed_edge(edge, bottleneck_flow)
-                    # edge.backward_edge.flow -= bottleneck_flow
-                    return bottleneck_flow
-
-            start[u] += 1
-
-        return 0
 
     def init(self, source, sink):
         self.queue = queue.Queue()
@@ -45,7 +22,7 @@ class PreFlowFIFOAlg:
 
         source.excess = -excess
 
-    def max_flow(self, source, sink):
+    def compute_max_flow(self, source, sink):
         self.graph.compute_exact_distances(source, sink)
         self.init(source, sink)
 
@@ -67,9 +44,8 @@ class PreFlowFIFOAlg:
                     self.queue.put(edge.dest)
 
             if vertex.excess > 0:
-                min_adj_level = min(self.graph.level[e.dest] for e in self.graph.get_edges(vertex))
-                self.graph.level[vertex] = min_adj_level + 1
+                min_level = min(self.graph.level[e.dest] for e in self.graph.get_edges(vertex))
+                self.graph.level[vertex] = min_level + 1
                 self.queue.put(vertex)
 
         return sink.excess
-

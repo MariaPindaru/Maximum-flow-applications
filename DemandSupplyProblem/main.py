@@ -1,21 +1,29 @@
-from Graph.Digraph import Digraph
-from Graph.Edge import Edge
-from Graph.Vertex import Vertex
-from PreFlowFIFOAlg import PreFlowFIFOAlg
+from SupplyDemandSolver import SupplyDemandSolver
 
 if __name__ == "__main__":
-    graph = Digraph()
+    solver = SupplyDemandSolver()
 
-    source: Vertex = Vertex('1')
-    sink: Vertex = Vertex('5')
+    supply_points = 2
+    supply_quantities = [10, 20]
+    demand_points = 3
+    demand_quantities = [10, 25, 15]
+    transit_points = 1
 
-    v1, v2, v3 = Vertex('2'), Vertex('3'), Vertex('4')
+    solver.create_supply_nodes(supply_points)
+    solver.create_transit_nodes(transit_points)
+    solver.create_demand_nodes(demand_points)
 
-    graph.add_vertex(source)
-    graph.add_vertex(v1)
-    graph.add_vertex(v2)
-    graph.add_vertex(v3)
-    graph.add_vertex(sink)
+    solver.set_constraints(supply_quantities, demand_quantities)
+
+    solver.print_solution()
+    
+    # v1, v2, v3 = Vertex('2'), Vertex('3'), Vertex('4')
+    #
+    # graph.add_vertex(source)
+    # graph.add_vertex(v1)
+    # graph.add_vertex(v2)
+    # graph.add_vertex(v3)
+    # graph.add_vertex(sink)
 
     ## 11
     # graph.add_edge(Edge(source, v1, 7))
@@ -28,16 +36,16 @@ if __name__ == "__main__":
     # graph.add_edge(Edge(v3, sink, 5))
 
     ## 12
-    graph.add_edge(Edge(source, v1, 8))
-    graph.add_edge(Edge(source, v2, 5))
-    graph.add_edge(Edge(v1, v2, 2))
-    graph.add_edge(Edge(v1, v3, 3))
-    graph.add_edge(Edge(v1, sink, 2))
-    graph.add_edge(Edge(v2, v1, 3))
-    graph.add_edge(Edge(v2, sink, 7))
-    graph.add_edge(Edge(v3, sink, 4))
+    # graph.add_edge(Edge(source, v1, 8))
+    # graph.add_edge(Edge(source, v2, 5))
+    # graph.add_edge(Edge(v1, v2, 2))
+    # graph.add_edge(Edge(v1, v3, 3))
+    # graph.add_edge(Edge(v1, sink, 2))
+    # graph.add_edge(Edge(v2, v1, 3))
+    # graph.add_edge(Edge(v2, sink, 7))
+    # graph.add_edge(Edge(v3, sink, 4))
 
-    alg = PreFlowFIFOAlg(graph)
-    max_flow_value = alg.max_flow(source, sink)
-    print(max_flow_value)
+    # alg = PreFlowFIFOAlg(graph)
+    # max_flow_value = alg.compute_max_flow(source, sink)
+    # print(max_flow_value)
 
